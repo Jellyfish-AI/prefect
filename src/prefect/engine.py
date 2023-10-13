@@ -154,6 +154,7 @@ from prefect.results import BaseResult, ResultFactory
 from prefect.settings import (
     PREFECT_DEBUG_MODE,
     PREFECT_LOGGING_LOG_PRINTS,
+    PREFECT_MESSAGE_TRUNCATE_LENGTH,
     PREFECT_TASKS_REFRESH_CACHE,
     PREFECT_UI_URL,
 )
@@ -2412,8 +2413,6 @@ def _emit_task_run_state_change_event(
     validated_state: State,
     follows: Optional[Event] = None,
 ) -> Event:
-    state_message_truncation_length = 100_000
-
     return emit_event(
         id=validated_state.id,
         occurred=validated_state.timestamp,
@@ -2428,7 +2427,7 @@ def _emit_task_run_state_change_event(
                     "type": str(initial_state.type.value),
                     "name": initial_state.name,
                     "message": truncated_to(
-                        state_message_truncation_length, initial_state.message
+                        PREFECT_MESSAGE_TRUNCATE_LENGTH.value(), initial_state.message
                     ),
                 }
                 if initial_state
@@ -2438,7 +2437,7 @@ def _emit_task_run_state_change_event(
                 "type": str(validated_state.type.value),
                 "name": validated_state.name,
                 "message": truncated_to(
-                    state_message_truncation_length, validated_state.message
+                    PREFECT_MESSAGE_TRUNCATE_LENGTH.value(), validated_state.message
                 ),
             },
         },
@@ -2446,7 +2445,7 @@ def _emit_task_run_state_change_event(
             "prefect.resource.id": f"prefect.task-run.{task_run.id}",
             "prefect.resource.name": task_run.name,
             "prefect.state-message": truncated_to(
-                state_message_truncation_length, validated_state.message
+                PREFECT_MESSAGE_TRUNCATE_LENGTH.value(), validated_state.message
             ),
             "prefect.state-name": validated_state.name or "",
             "prefect.state-timestamp": (

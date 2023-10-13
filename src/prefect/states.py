@@ -27,10 +27,14 @@ from prefect.exceptions import (
     UnfinishedRun,
 )
 from prefect.results import BaseResult, R, ResultFactory
-from prefect.settings import PREFECT_ASYNC_FETCH_STATE_RESULT
+from prefect.settings import (
+    PREFECT_ASYNC_FETCH_STATE_RESULT,
+    PREFECT_MESSAGE_TRUNCATE_LENGTH,
+)
 from prefect.utilities.annotations import BaseAnnotation
 from prefect.utilities.asyncutils import in_async_main_thread, sync_compatible
 from prefect.utilities.collections import ensure_iterable
+from prefect.utilities.text import truncated_to
 
 
 def get_state_result(
@@ -126,12 +130,11 @@ def format_exception(exc: BaseException, tb: TracebackType = None) -> str:
             f"{exc_type.__module__}.{exc_type.__name__}", exc_type.__name__
         )
 
-    return formatted
+    return truncated_to(PREFECT_MESSAGE_TRUNCATE_LENGTH.value(), formatted)
 
 
 async def exception_to_crashed_state(
-    exc: BaseException,
-    result_factory: Optional[ResultFactory] = None,
+    exc: BaseException, result_factory: Optional[ResultFactory] = None,
 ) -> State:
     """
     Takes an exception that occurs _outside_ of user code and converts it to a

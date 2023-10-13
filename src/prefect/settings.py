@@ -871,6 +871,10 @@ PREFECT_AGENT_QUERY_INTERVAL = Setting(
     float,
     default=15,
 )
+
+PREFECT_MESSAGE_TRUNCATE_LENGTH = Setting(int, default=100_000,)
+"""Text truncation limit for flow state messages"""
+
 """
 The agent loop interval, in seconds. Agents will check for new runs this often.
 Defaults to `15`.
