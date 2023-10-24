@@ -13,10 +13,7 @@ from typing_extensions import TypeGuard
 
 from prefect.client.schemas import State as State
 from prefect.client.schemas import StateDetails, StateType
-from prefect.deprecated.data_documents import (
-    DataDocument,
-    result_from_state_with_data_document,
-)
+from prefect.deprecated.data_documents import DataDocument, result_from_state_with_data_document
 from prefect.exceptions import (
     CancelledRun,
     CrashedRun,
@@ -27,10 +24,7 @@ from prefect.exceptions import (
     UnfinishedRun,
 )
 from prefect.results import BaseResult, R, ResultFactory
-from prefect.settings import (
-    PREFECT_ASYNC_FETCH_STATE_RESULT,
-    PREFECT_MESSAGE_TRUNCATE_LENGTH,
-)
+from prefect.settings import PREFECT_ASYNC_FETCH_STATE_RESULT, PREFECT_MESSAGE_TRUNCATE_LENGTH
 from prefect.utilities.annotations import BaseAnnotation
 from prefect.utilities.asyncutils import in_async_main_thread, sync_compatible
 from prefect.utilities.collections import ensure_iterable
@@ -213,7 +207,7 @@ async def exception_to_failed_state(
 
     # TODO: Consider if we want to include traceback information, it is intentionally
     #       excluded from messages for now
-    message = existing_message + format_exception(exc)
+    message = truncated_to(PREFECT_MESSAGE_TRUNCATE_LENGTH.value(), existing_message + format_exception(exc))
 
     return Failed(data=data, message=message, **kwargs)
 
