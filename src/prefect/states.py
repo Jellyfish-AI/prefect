@@ -213,7 +213,9 @@ async def exception_to_failed_state(
 
     # TODO: Consider if we want to include traceback information, it is intentionally
     #       excluded from messages for now
-    message = existing_message + format_exception(exc)
+    message = truncated_to(
+        PREFECT_MESSAGE_TRUNCATE_LENGTH.value(), existing_message + format_exception(exc)
+    )
 
     return Failed(data=data, message=message, **kwargs)
 
