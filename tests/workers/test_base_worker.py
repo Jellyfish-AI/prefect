@@ -6,7 +6,7 @@ import anyio
 import pendulum
 import pydantic
 import pytest
-from pydantic import Field
+from pydantic.v1 import Field
 
 import prefect
 import prefect.server.schemas as schemas

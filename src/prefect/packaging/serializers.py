@@ -7,7 +7,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any, List
 
-import pydantic
+import pydantic.v1 as pydantic
 from typing_extensions import Literal
 
 from prefect.packaging.base import Serializer

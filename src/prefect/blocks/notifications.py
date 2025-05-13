@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import Dict, List, Optional
 
-from pydantic import AnyHttpUrl, Field, SecretStr
+from pydantic.v1 import AnyHttpUrl, Field, SecretStr
 from typing_extensions import Literal
 
 from prefect.blocks.abstract import NotificationBlock

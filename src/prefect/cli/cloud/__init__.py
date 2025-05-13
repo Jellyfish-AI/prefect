@@ -15,7 +15,7 @@ import typer
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 from rich.live import Live
 from rich.table import Table
 from typing_extensions import Literal

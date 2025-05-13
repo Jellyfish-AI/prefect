@@ -28,7 +28,7 @@ from typing import (
 
 import anyio.abc
 import pendulum
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic.v1 import BaseModel, Field, PrivateAttr
 
 import prefect.logging
 import prefect.logging.configuration

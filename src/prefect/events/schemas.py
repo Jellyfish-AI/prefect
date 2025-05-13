@@ -3,8 +3,8 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, Union, cast
 from uuid import UUID, uuid4
 
 import pendulum
-from pydantic import Extra, Field, PrivateAttr, root_validator, validator
-from pydantic.fields import ModelField
+from pydantic.v1 import Extra, Field, PrivateAttr, root_validator, validator
+from pydantic.v1.fields import ModelField
 
 from prefect._internal.schemas.bases import PrefectBaseModel
 from prefect._internal.schemas.fields import DateTimeTZ

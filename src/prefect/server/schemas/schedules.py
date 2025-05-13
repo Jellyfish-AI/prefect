@@ -10,7 +10,7 @@ import dateutil.rrule
 import pendulum
 import pytz
 from croniter import croniter
-from pydantic import Field, validator
+from pydantic.v1 import Field, validator
 
 from prefect.server.utilities.schemas import DateTimeTZ, PrefectBaseModel
 

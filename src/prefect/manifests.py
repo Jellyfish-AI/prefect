@@ -5,7 +5,7 @@ They are the foundational building blocks for defining Flow Deployments.
 """
 
 
-from pydantic import BaseModel, Field
+from pydantic.v1 import BaseModel, Field
 
 from prefect.utilities.callables import ParameterSchema
 

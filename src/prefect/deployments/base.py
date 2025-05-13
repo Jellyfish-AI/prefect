@@ -14,7 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 import yaml
 from ruamel.yaml import YAML

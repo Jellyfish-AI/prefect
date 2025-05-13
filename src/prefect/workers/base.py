@@ -6,7 +6,7 @@ from uuid import uuid4
 import anyio
 import anyio.abc
 import pendulum
-from pydantic import BaseModel, Field, PrivateAttr, validator
+from pydantic.v1 import BaseModel, Field, PrivateAttr, validator
 
 
 import prefect

@@ -13,7 +13,7 @@ from typing import (
     Union,
 )
 
-import pydantic
+import pydantic.v1 as pydantic
 from typing_extensions import Self
 
 import prefect

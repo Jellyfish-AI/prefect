@@ -365,7 +365,7 @@ Type hints provide an easy way to enforce typing on your flow parameters via [py
 
 ```python
 from prefect import flow
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 class Model(BaseModel):
     a: int

@@ -7,7 +7,7 @@ import datetime
 from uuid import UUID
 
 import sqlalchemy as sa
-from pydantic import parse_obj_as
+from pydantic.v1 import parse_obj_as
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
