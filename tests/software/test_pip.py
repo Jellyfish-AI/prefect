@@ -1,5 +1,5 @@
 import packaging.requirements
-import pydantic
+import pydantic.v1 as pydantic
 import pytest
 
 from prefect.software.pip import PipRequirement, current_environment_requirements

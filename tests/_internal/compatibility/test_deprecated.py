@@ -1,6 +1,6 @@
 from typing import Optional
 
-import pydantic
+import pydantic.v1 as pydantic
 import pytest
 
 from prefect._internal.compatibility.deprecated import (

@@ -4,7 +4,7 @@ import uuid
 from dataclasses import dataclass
 from unittest.mock import MagicMock
 
-import pydantic
+import pydantic.v1 as pydantic
 import pytest
 
 from prefect.serializers import (
