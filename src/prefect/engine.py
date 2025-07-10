@@ -1852,7 +1852,7 @@ async def wait_for_task_runs_and_report_crashes(
     )
 
     # Gather states concurrently first
-    engine_logger.debug("Gathering states for all task run futures.")
+    engine_logger.info("Gathering states for all task run futures.")
     states = await gather(*(future._wait for future in task_run_futures))
     engine_logger.info("Successfully gathered all task run states")
 
@@ -2170,7 +2170,7 @@ async def propose_state(
         wait_count = 0
         while response.status == SetStateStatus.WAIT:
             wait_count += 1
-            engine_logger.debug(
+            engine_logger.info(
                 f"Received wait instruction for {response.details.delay_seconds}s: "
                 f"{response.details.reason} (attempt {wait_count})"
             )
