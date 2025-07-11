@@ -829,8 +829,18 @@ async def orchestrate_flow_run(
 
                 result = await flow_call.aresult()
 
+                logger.info(
+                    f"Flow function completed. Waiting for {len(flow_run_context.task_run_futures)} "
+                    f"task run futures to complete..."
+                )
+
                 waited_for_task_runs = await wait_for_task_runs_and_report_crashes(
                     flow_run_context.task_run_futures, client=client
+                )
+                
+                logger.info(
+                    f"Successfully waited for all {len(flow_run_context.task_run_futures)} "
+                    f"task run futures"
                 )
         except PausedRun as exc:
             # could get raised either via utility or by returning Paused from a task run
@@ -888,6 +898,10 @@ async def orchestrate_flow_run(
             # An exception occured that prevented us from waiting for task runs to
             # complete. Ensure that we wait for them before proposing a final state
             # for the flow run.
+            logger.warning(
+                f"Exception occurred before waiting for task runs. "
+                f"Now waiting for {len(flow_run_context.task_run_futures)} task run futures."
+            )
             await wait_for_task_runs_and_report_crashes(
                 flow_run_context.task_run_futures, client=client
             )
@@ -898,11 +912,19 @@ async def orchestrate_flow_run(
         # from being sent to the Prefect API and stored in the Prefect database.
         # state.data is left as is, otherwise we would have to load
         # the data from block storage again after storing.
+        logger.info(
+            f"Proposing final state {terminal_state.name!r} for flow run {flow_run.name!r}"
+        )
         state = await propose_state(
             client,
             state=terminal_state,
             flow_run_id=flow_run.id,
         )
+        logger.info(
+            f"Successfully proposed final state {state.name!r} for flow run {flow_run.name!r}"
+        )
+
+        logger.info("Beginning _run_flow_hooks")
 
         await _run_flow_hooks(flow=flow, flow_run=flow_run, state=state)
 
@@ -1824,8 +1846,15 @@ async def wait_for_task_runs_and_report_crashes(
 ) -> Literal[True]:
     crash_exceptions = []
 
+    futures_list = list(task_run_futures)
+    engine_logger.info(
+        f"Starting to wait for {len(futures_list)} task run futures to complete."
+    )
+
     # Gather states concurrently first
+    engine_logger.info("Gathering states for all task run futures.")
     states = await gather(*(future._wait for future in task_run_futures))
+    engine_logger.info("Successfully gathered all task run states")
 
     for future, state in zip(task_run_futures, states):
         logger = task_run_logger(future.task_run)
@@ -2138,13 +2167,20 @@ async def propose_state(
     # reaching max recursion depth in extreme cases.
     async def set_state_and_handle_waits(set_state_func) -> OrchestrationResult:
         response = await set_state_func()
+        wait_count = 0
         while response.status == SetStateStatus.WAIT:
-            engine_logger.debug(
+            wait_count += 1
+            engine_logger.info(
                 f"Received wait instruction for {response.details.delay_seconds}s: "
-                f"{response.details.reason}"
+                f"{response.details.reason} (attempt {wait_count})"
             )
             await anyio.sleep(response.details.delay_seconds)
             response = await set_state_func()
+        
+        if wait_count > 0:
+            engine_logger.info(
+                f"Completed state proposal after {wait_count} wait attempts"
+            )
         return response
 
     # Attempt to set the state
