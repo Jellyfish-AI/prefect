@@ -502,7 +502,7 @@ async def begin_flow_run(
                 " the same flow."
             )
 
-        logger.debug(
+        logger.info(
             f"Starting {type(flow.task_runner).__name__!r}; submitted tasks "
             f"will be run {CONCURRENCY_MESSAGES[flow.task_runner.concurrency_type]}..."
         )
@@ -518,6 +518,7 @@ async def begin_flow_run(
         if log_prints:
             stack.enter_context(patch_print())
 
+        logger.info("Starting orchestrate_flow_run")
         terminal_or_paused_state = await orchestrate_flow_run(
             flow,
             flow_run=flow_run,
@@ -734,16 +735,14 @@ async def orchestrate_flow_run(
         Since async flows are run directly in the main event loop, timeout behavior will
         match that described by anyio. If the flow is awaiting something, it will
         immediately return; otherwise, the next time it awaits it will exit. Sync flows
-        are being task runner in a worker thread, which cannot be interrupted. The worker
-        thread will exit at the next task call. The worker thread also has access to the
-        status of the cancellation scope at `FlowRunContext.timeout_scope.cancel_called`
-        which allows it to raise a `TimeoutError` to respect the timeout.
-
-    Returns:
-        The final state of the run
+        are being task runner in a worker thread and will timeout as expected.
     """
+    logger = flow_run_logger(flow_run, flow)
+    logger.info("🚨 CUSTOM LOGGING TEST - orchestrate_flow_run started 🚨")
+    logger.info("Starting flow orchestration")
 
     logger = flow_run_logger(flow_run, flow)
+    logger.info("Starting flow orchestration")
 
     flow_run_context = None
     parent_flow_run_context = FlowRunContext.get()
@@ -770,7 +769,10 @@ async def orchestrate_flow_run(
     while state.is_running():
         waited_for_task_runs = False
 
+        logger.info("state is running, looping")
+
         # Update the flow run to the latest data
+        logger.info(f"Reading flow run {flow_run.id}")
         flow_run = await client.read_flow_run(flow_run.id)
         try:
             with partial_flow_run_context.finalize(
@@ -789,24 +791,25 @@ async def orchestrate_flow_run(
                         flow_run_id=flow_run.id, name=flow_run_name
                     )
                     logger.extra["flow_run_name"] = flow_run_name
-                    logger.debug(
+                    logger.info(
                         f"Renamed flow run {flow_run.name!r} to {flow_run_name!r}"
                     )
                     flow_run.name = flow_run_name
                     run_name_set = True
 
                 args, kwargs = parameters_to_args_kwargs(flow.fn, parameters)
-                logger.debug(
+                logger.info(
                     f"Executing flow {flow.name!r} for flow run {flow_run.name!r}..."
                 )
 
                 if PREFECT_DEBUG_MODE:
-                    logger.debug(f"Executing {call_repr(flow.fn, *args, **kwargs)}")
+                    logger.info(f"Executing {call_repr(flow.fn, *args, **kwargs)}")
                 else:
-                    logger.debug(
+                    logger.info(
                         "Beginning execution...", extra={"state_message": True}
                     )
 
+                logger.info("Creating flow call")
                 flow_call = create_call(flow.fn, *args, **kwargs)
 
                 # This check for a parent call is needed for cases where the engine
@@ -820,14 +823,17 @@ async def orchestrate_flow_run(
                         and parent_flow_run_context.flow.isasync == flow.isasync
                     )
                 ):
+                    logger.info("Calling flow call in waiting thread")
                     from_async.call_soon_in_waiting_thread(
                         flow_call, thread=user_thread, timeout=flow.timeout_seconds
                     )
                 else:
+                    logger.info("Calling flow call in new thread")
                     from_async.call_soon_in_new_thread(
                         flow_call, timeout=flow.timeout_seconds
                     )
 
+                logger.info("Waiting for flow call result")
                 result = await flow_call.aresult()
 
                 logger.info(
@@ -882,6 +888,7 @@ async def orchestrate_flow_run(
             )
         else:
             if result is None:
+                logger.info("No result, using task run futures, states, and flow run states")
                 # All tasks and subflows are reference tasks if there is no return value
                 # If there are no tasks, use `None` instead of an empty iterable
                 result = (
@@ -2367,10 +2374,12 @@ async def _run_task_hooks(task: Task, task_run: TaskRun, state: State) -> None:
 
     if hooks:
         logger = task_run_logger(task_run)
+        logger.info("LOGGING TEST - _run_task_hooks started")
+        logger.info("Running task hooks")
         for hook in hooks:
             try:
                 logger.info(
-                    f"Running hook {hook.__name__!r} in response to entering state"
+                    f"LLB: Running hook {hook.__name__!r} in response to entering state"
                     f" {state.name!r}"
                 )
                 if is_async_fn(hook):
@@ -2385,7 +2394,7 @@ async def _run_task_hooks(task: Task, task_run: TaskRun, state: State) -> None:
                     exc_info=True,
                 )
             else:
-                logger.info(f"Hook {hook.__name__!r} finished running successfully")
+                logger.info(f"LLB: Hook {hook.__name__!r} finished running successfully")
 
 
 async def _run_flow_hooks(flow: Flow, flow_run: FlowRun, state: State) -> None:
@@ -2407,7 +2416,7 @@ async def _run_flow_hooks(flow: Flow, flow_run: FlowRun, state: State) -> None:
         for hook in hooks:
             try:
                 logger.info(
-                    f"Running hook {hook.__name__!r} in response to entering state"
+                    f"LLB: Running hook {hook.__name__!r} in response to entering state"
                     f" {state.name!r}"
                 )
                 if is_async_fn(hook):
@@ -2422,7 +2431,7 @@ async def _run_flow_hooks(flow: Flow, flow_run: FlowRun, state: State) -> None:
                     exc_info=True,
                 )
             else:
-                logger.info(f"Hook {hook.__name__!r} finished running successfully")
+                logger.info(f"LLB: Hook {hook.__name__!r} finished running successfully")
 
 
 async def check_api_reachable(client: PrefectClient, fail_message: str):
