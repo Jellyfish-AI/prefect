@@ -1679,6 +1679,7 @@ class PrefectClient:
         Returns:
             a Flow Run model representation of the flow run
         """
+        logger.info(f"Reading flow run {flow_run_id}")
         try:
             response = await self._client.get(f"/flow_runs/{flow_run_id}")
         except httpx.HTTPStatusError as e:
