@@ -63,7 +63,7 @@ def prepare_for_flow_run(
 A worker configuration class is a [Pydantic model](https://docs.pydantic.dev/usage/models/), so you can add additional attributes to your configuration class as Pydantic fields. For example, if you want to allow memory and CPU requests for your worker, you can do so like this:
 
 ```python
-from pydantic import Field
+from pydantic.v1 import Field
 from prefect.workers.base import BaseJobConfiguration
 
 class MyWorkerConfiguration(BaseJobConfiguration):
@@ -135,7 +135,7 @@ Notice that each attribute for the class was added in the `job_configuration` se
 You can customize the template for each attribute for situations where the configuration values should use more sophisticated templating. For example, if you want to add units for the `memory` attribute, you can do so like this:
 
 ```python
-from pydantic import Field
+from pydantic.v1 import Field
 from prefect.workers.base import BaseJobConfiguration
 
 class MyWorkerConfiguration(BaseJobConfiguration):
@@ -235,7 +235,7 @@ Default template variables for a worker are defined by implementing the `BaseVar
 Additional attributes can be added to the `BaseVariables` class to define additional template variables. For example, if you want to allow memory and CPU requests for your worker, you can do so like this:
 
 ```python
-from pydantic import Field
+from pydantic.v1 import Field
 from prefect.workers.base import BaseVariables
 
 class MyWorkerTemplateVariables(BaseVariables):

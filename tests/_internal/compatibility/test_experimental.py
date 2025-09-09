@@ -1,7 +1,7 @@
 import re
 
 import pytest
-from pydantic import BaseModel, ValidationError
+from pydantic.v1 import BaseModel, ValidationError
 
 from prefect._internal.compatibility.experimental import (
     ExperimentalFeature,

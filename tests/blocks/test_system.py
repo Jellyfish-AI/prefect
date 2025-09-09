@@ -1,5 +1,5 @@
 import pendulum
-from pydantic import SecretStr
+from pydantic.v1 import SecretStr
 
 from prefect.blocks import system
 

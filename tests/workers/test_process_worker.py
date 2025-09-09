@@ -10,7 +10,7 @@ import anyio
 import anyio.abc
 import pendulum
 import pytest
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 import prefect
 from prefect import flow

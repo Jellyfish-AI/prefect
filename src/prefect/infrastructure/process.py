@@ -12,7 +12,7 @@ from typing import Dict, Tuple, Union
 import anyio
 import anyio.abc
 import sniffio
-from pydantic import Field
+from pydantic.v1 import Field
 from typing_extensions import Literal
 
 from prefect.exceptions import InfrastructureNotAvailable, InfrastructureNotFound

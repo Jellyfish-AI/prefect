@@ -30,7 +30,7 @@ Building your own custom block is simple!
 
 For example, this is how the [Secret block is implemented](https://github.com/PrefectHQ/prefect/blob/main/src/prefect/blocks/system.py#L76-L102):
 ```python
-from pydantic import Field, SecretStr
+from pydantic.v1 import Field, SecretStr
 from prefect.blocks.core import Block
 
 class Secret(Block):

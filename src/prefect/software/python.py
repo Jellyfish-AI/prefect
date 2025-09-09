@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 from typing import List, Type
 
-from pydantic import BaseModel, Field, validate_arguments, validator
+from pydantic.v1 import BaseModel, Field, validate_arguments, validator
 from typing_extensions import Self
 
 from prefect.software.pip import PipRequirement, current_environment_requirements

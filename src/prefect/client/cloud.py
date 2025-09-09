@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional
 
 import anyio
 import httpx
-import pydantic
+import pydantic.v1 as pydantic
 from fastapi import status
 
 import prefect.context

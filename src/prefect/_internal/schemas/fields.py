@@ -3,7 +3,7 @@ from typing import Optional
 from uuid import UUID
 
 import pendulum
-from pydantic import BaseModel, Field
+from pydantic.v1 import BaseModel, Field
 
 
 class DateTimeTZ(pendulum.DateTime):

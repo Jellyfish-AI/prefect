@@ -15,7 +15,7 @@ import warnings
 from typing import Any, Callable, List, Optional, Type, TypeVar
 
 import pendulum
-import pydantic
+import pydantic.v1 as pydantic
 
 from prefect.utilities.callables import get_call_parameters
 from prefect.utilities.importtools import (

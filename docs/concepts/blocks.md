@@ -252,7 +252,7 @@ Here's an example of an `AWSCredentials` block that uses `SecretStr`:
 from typing import Optional
 
 from prefect.blocks.core import Block
-from pydantic import SecretStr
+from pydantic.v1 import SecretStr
 
 class AWSCredentials(Block):
     aws_access_key_id: Optional[str] = None
@@ -336,7 +336,7 @@ from typing import Optional
 
 import boto3
 from prefect.blocks.core import Block
-from pydantic import SecretStr
+from pydantic.v1 import SecretStr
 
 class AWSCredentials(Block):
     aws_access_key_id: Optional[str] = None

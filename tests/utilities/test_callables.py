@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Any, Dict, List, Tuple, Union
 
 import pendulum
-import pydantic.version
+import pydantic.v1.version
 import pytest
 from packaging.version import Version
 

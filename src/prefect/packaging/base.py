@@ -1,7 +1,7 @@
 import abc
 from typing import Generic, TypeVar
 
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from prefect.flows import Flow
 from prefect.utilities.callables import ParameterSchema, parameter_schema

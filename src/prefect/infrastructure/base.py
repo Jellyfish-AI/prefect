@@ -2,7 +2,7 @@ import abc
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 import anyio.abc
-import pydantic
+import pydantic.v1 as pydantic
 from typing_extensions import Self
 
 import prefect

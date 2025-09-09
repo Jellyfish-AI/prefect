@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Dict, Generator, List, Optional, Tuple, Union
 
 import anyio.abc
 import packaging.version
-from pydantic import Field, validator
+from pydantic.v1 import Field, validator
 from typing_extensions import Literal
 
 import prefect

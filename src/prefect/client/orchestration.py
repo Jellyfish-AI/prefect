@@ -8,7 +8,7 @@ from uuid import UUID
 import httpcore
 import httpx
 import pendulum
-import pydantic
+import pydantic.v1 as pydantic
 from asgi_lifespan import LifespanManager
 from fastapi import FastAPI, status
 

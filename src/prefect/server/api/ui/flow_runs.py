@@ -3,7 +3,7 @@ from typing import List
 from uuid import UUID
 
 from fastapi import Body, Depends
-from pydantic import Field
+from pydantic.v1 import Field
 
 import prefect.server.schemas as schemas
 from prefect.logging import get_logger

@@ -11,7 +11,7 @@ from uuid import uuid4
 import anyio
 import pendulum
 import pytest
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 from prefect.task_runners import BaseTaskRunner, TaskConcurrencyType
 
 import prefect.flows

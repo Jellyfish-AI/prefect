@@ -5,7 +5,7 @@ from uuid import uuid4
 import pydantic
 import pytest
 from fastapi import status
-from pydantic import SecretBytes, SecretStr
+from pydantic.v1 import SecretBytes, SecretStr
 
 from prefect.blocks.core import Block
 from prefect.blocks.fields import SecretDict
